@@ -1,8 +1,8 @@
 {
-  "lastUpdated": "2025-01-15T14:00:00.000Z",
+  "lastUpdated": "2026-01-15T21:39:13.224Z",
   "sourceUrl": "https://stpetes.com/pages/poudre-river-fishing-report-fort-collins-fly-fishing",
-  "flowInfo": "Current Streamflow: 62 cfs @ Canyon Mouth, 28 cfs @ Fort Collins, 7 cfs @ North Fork below Seaman Reservoir",
-  "reportText": "Freezing night time temps forecasted over the next week will start to build a bit more ice. Still plenty of fishable water in the lower stretches of the canyon though!\n\nCold water temperatures will keep our bug diversity and size down. The afternoons have been seeing some rising action so don't discount the dry fly and emergers! Wherever you head in the Fort Collins area to fish, bugs will be small. Sz 20-24 Midge and Baetis patterns, and keep in mind emerger patterns of equivalent sizes. Try a UV Emerger or a Bling Midge! Dare we say keep an eye for the midge hatches and maybe some BWO's. Check out a Charlie Craven's Mole Fly, or Shucking Midge to fool those trout that are sipping!\n\nFlows in Gateway have been up and down on the gauge so keep your eye on the flows here. A bump above 10 always gets the fish happy here. In Town has flow currently, so this should be on your list now!",
+  "flowInfo": "Current Streamflow : 62 cfs",
+  "reportText": "@ Canyon Mouth , 28 cfs @ Fort Collins , 7 cfs @ North Fork below Seaman Reservoir Freezing night time temps forecasted over the next week will start to build a bit more ice. Still plenty of fishable water in the lower stretches of the canyon tough! Cold water temperatures will keep our bug diversity and size down. The afternoons have been seeing some rising action so don't discount the dry fly and emergers! Wherever you head in the Fort Collins area to fish, bugs will be small. Sz 20-24 Midge and Baetis patterns, and keep in mind emerger patterns of equivalent sizes. Try a UV Emerger or a Bling Midge! Dare we say keep an eye for the midge hatches and maybe some BWO's. Check out a Charlie Craven's Mole Fly, or Shucking Midge to fool those trout that are sipping! Flows in Gateway have been up and down on the gauge so keep your eye on the flows here. A bump above 10 always gets the fish happy here. In Town has flow currently, so this should be on your list now! If the inconsistent weather is too much for you, you can switch into tying mode and get creative! Check out our Intro to Fly Tying Class if tying is new to you! Check out our Poudre Assortment of bugs, nice Gateway assortment for the time! HERE! If you are looking for some help in this time to find fishable water or how to fish this technical stuff, come see us at either shop!",
   "mentionedFlies": [
     "UV Emerger",
     "Bling Midge",
@@ -12,49 +12,7 @@
     "BWO",
     "Sz 20-24 Midge"
   ],
-  "dryFlies": [
-    {
-      "name": "Blue Wing Olive",
-      "image": "https://stpetes.com/cdn/shop/files/Blue_Wing_Olive_Dry_Fly_BWO_3.jpg?width=400",
-      "size": "20-24"
-    },
-    {
-      "name": "Parachute Adams",
-      "image": "https://stpetes.com/cdn/shop/files/Parachute_Adams_Dry_Fly_3.jpg?width=400",
-      "size": "18-22"
-    },
-    {
-      "name": "Griffith's Gnat",
-      "image": "https://stpetes.com/cdn/shop/files/Griffiths_Gnat_3.jpg?width=400",
-      "size": "18-22"
-    }
-  ],
-  "nymphs": [
-    {
-      "name": "UV Emerger",
-      "image": "https://stpetes.com/cdn/shop/files/uvmidge.jpg?width=400",
-      "size": "24-26"
-    },
-    {
-      "name": "Bling Midge",
-      "image": "https://stpetes.com/cdn/shop/files/M005TN.jpg?width=400",
-      "size": "20-24"
-    },
-    {
-      "name": "Zebra Midge",
-      "image": "https://stpetes.com/cdn/shop/files/Zebra_midge_red.png?width=400",
-      "size": "18-22"
-    },
-    {
-      "name": "Two Bit Hooker",
-      "image": "https://stpetes.com/cdn/shop/files/Two_Bit_Hooker_Nymph_3.jpg?width=400",
-      "size": "18-20"
-    },
-    {
-      "name": "Juju Baetis",
-      "image": "https://stpetes.com/cdn/shop/files/Juju_Baetis_3.jpg?width=400",
-      "size": "18-22"
-    }
-  ],
+  "dryFlies": [],
+  "nymphs": [],
   "streamers": []
 }
