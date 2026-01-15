@@ -525,7 +525,7 @@
       "sourceUrl": "https://stpetes.com/pages/poudre-river-fishing-report-fort-collins-fly-fishing",
       "flowInfo": "Current Streamflow: 70 cfs @ Canyon Mouth, 36 cfs @ Fort Collins",
       "reportText": "Freezing night time temps forecasted over the next week will start to build a bit more ice. Still plenty of fishable water in the lower stretches of the canyon though!\n\nCold water temperatures will keep our bug diversity and size down. The afternoons have been seeing some rising action so don't discount the dry fly and emergers! Wherever you head in the Fort Collins area to fish, bugs will be small. Sz 20-24 Midge and Baetis patterns, and keep in mind emerger patterns of equivalent sizes. Try a UV Emerger or a Bling Midge! Dare we say keep an eye for the midge hatches and maybe some BWO's. Check out a Charlie Craven's Mole Fly, or Shucking Midge to fool those trout that are sipping!\n\nFlows in Gateway have been up and down on the gauge so keep your eye on the flows here. A bump above 10 always gets the fish happy here. In Town has flow currently, so this should be on your list now!",
-      "mentionedFlies": ["UV Emerger", "Bling Midge", "Mole Fly", "Shucking Midge", "BWO", "Sz 20-24 Midge"],
+      "mentionedFlies": ["UV Emerger", "Bling Midge", "Charlie Craven's Mole Fly", "Shucking Midge", "BWO", "Sz 20-24 Midge"],
       "dryFlies": [
         {"name": "Parachute Adams", "image": "https://stpetes.com/cdn/shop/files/Parachute_Adams_Dry_Fly_3.jpg?v=1734565817&width=400", "size": "18-22"},
         {"name": "Blue Wing Olive", "image": "https://stpetes.com/cdn/shop/files/Blue_Wing_Olive_Dry_Fly_BWO_3.jpg?v=1734565920&width=400", "size": "20-24"},
@@ -644,7 +644,7 @@
                   <div class="fly-card">
                     <div class="fly-image-wrapper">
                       ${fly.image 
-                        ? `<img class="fly-image" src="${fly.image}" alt="${fly.name}" loading="lazy">`
+                        ? `<img class="fly-image" src="${fly.image}" alt="${fly.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fly-image-placeholder" style="display:none">🪰</div>`
                         : `<div class="fly-image-placeholder">🪰</div>`
                       }
                     </div>
