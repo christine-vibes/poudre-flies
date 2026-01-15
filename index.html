@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a3a4a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Poudre Flies">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Poudre River Fly Report</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --river-deep: #1a3a4a;
+      --river-mid: #2d5a6b;
+      --river-light: #4a8fa8;
+      --sand: #f5f0e8;
+      --sand-dark: #e8e0d0;
+      --bark: #5c4a3d;
+      --moss: #6b8f71;
+      --moss-light: #8ab890;
+      --cream: #fffef9;
+      --shadow: rgba(26, 58, 74, 0.12);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: var(--sand);
+      color: var(--river-deep);
+      min-height: 100vh;
+      min-height: 100dvh;
+      line-height: 1.5;
+    }
+    
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--river-deep) 0%, var(--river-mid) 100%);
+      color: var(--cream);
+      padding: 1.5rem 1rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px var(--shadow);
+    }
+    
+    .header-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    h1 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(255,255,255,0.15);
+      padding: 0.35rem 0.6rem;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--moss-light);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .status-dot.offline {
+      background: #e8a87c;
+      animation: none;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+    
+    .update-info {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .refresh-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: inherit;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .refresh-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .refresh-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .refresh-btn.loading {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Main content */
+    main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    
+    /* Report text section */
+    .report-section {
+      background: var(--cream);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+    
+    .report-section h2 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--river-mid);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .report-section h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.1em;
+      background: var(--moss);
+      border-radius: 2px;
+    }
+    
+    .report-text {
+      font-size: 0.9rem;
+      color: var(--bark);
+      line-height: 1.65;
+    }
+    
+    .report-text p {
+      margin-bottom: 0.75rem;
+    }
+    
+    .report-text p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .flow-info {
+      background: var(--sand);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+    
+    .flow-info strong {
+      color: var(--river-mid);
+    }
+    
+    /* Mentioned flies highlight */
+    .mentioned-flies {
+      background: linear-gradient(135deg, var(--moss) 0%, #5a7f60 100%);
+      color: var(--cream);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .mentioned-flies h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      opacity: 0.9;
+    }
+    
+    .mentioned-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    
+    .mentioned-tag {
+      background: rgba(255,255,255,0.2);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    /* Fly grid */
+    .fly-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .fly-section h2 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--river-deep);
+      margin-bottom: 1rem;
+      padding-left: 0.5rem;
+      border-left: 4px solid var(--river-light);
+    }
+    
+    .fly-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .fly-card {
+      background: var(--cream);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .fly-card:active {
+      transform: scale(0.98);
+    }
+    
+    .fly-image-wrapper {
+      aspect-ratio: 1;
+      background: var(--sand);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .fly-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    
+    .fly-card:hover .fly-image {
+      transform: scale(1.05);
+    }
+    
+    .fly-image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--sand) 0%, var(--sand-dark) 100%);
+      color: var(--bark);
+      font-size: 2rem;
+    }
+    
+    .fly-info {
+      padding: 0.75rem;
+    }
+    
+    .fly-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--river-deep);
+      line-height: 1.3;
+      margin-bottom: 0.25rem;
+    }
+    
+    .fly-size {
+      font-size: 0.75rem;
+      color: var(--bark);
+      opacity: 0.8;
+    }
+    
+    .fly-category {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--moss);
+      background: rgba(107, 143, 113, 0.15);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      margin-top: 0.35rem;
+    }
+    
+    /* Loading state */
+    .loading-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--bark);
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--sand-dark);
+      border-top-color: var(--river-mid);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    /* Error state */
+    .error-state {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      color: #991b1b;
+    }
+    
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--bark);
+      font-size: 0.9rem;
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--bark);
+      opacity: 0.7;
+    }
+    
+    footer a {
+      color: var(--river-mid);
+    }
+    
+    /* Install prompt */
+    .install-prompt {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      max-width: 580px;
+      margin: 0 auto;
+      background: var(--river-deep);
+      color: var(--cream);
+      padding: 1rem;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(150%);
+      transition: transform 0.3s ease-out;
+      z-index: 200;
+    }
+    
+    .install-prompt.show {
+      transform: translateY(0);
+    }
+    
+    .install-prompt p {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    
+    .install-prompt button {
+      background: var(--moss);
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    
+    .install-prompt .dismiss {
+      background: transparent;
+      padding: 0.4rem;
+      font-size: 1.2rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="header-top">
+        <h1>Poudre River<br>Fly Report</h1>
+        <div class="status-badge">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Online</span>
+        </div>
+      </div>
+      <div class="update-info">
+        <span id="lastUpdate">Loading...</span>
+        <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">↻ Refresh</button>
+      </div>
+    </div>
+  </header>
+  
+  <main id="mainContent">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading fly report...</p>
+    </div>
+  </main>
+  
+  <footer>
+    Data from <a href="https://stpetes.com" target="_blank" rel="noopener">St. Peter's Fly Shop</a><br>
+    Add to home screen for offline access
+  </footer>
+  
+  <div class="install-prompt" id="installPrompt">
+    <p>Add to home screen for offline access at the river!</p>
+    <button onclick="installApp()">Install</button>
+    <button class="dismiss" onclick="dismissInstall()">×</button>
+  </div>
+
+  <script>
+    // Register service worker (silently fails in preview environments - that's OK)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('SW registered'))
+        .catch(() => {}); // Silent fail - expected in preview/dev environments
+    }
+    
+    // Online/offline status
+    function updateOnlineStatus() {
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      if (navigator.onLine) {
+        dot.classList.remove('offline');
+        text.textContent = 'Online';
+      } else {
+        dot.classList.add('offline');
+        text.textContent = 'Offline';
+      }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // PWA install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show install prompt after a delay
+      setTimeout(() => {
+        if (!localStorage.getItem('installDismissed')) {
+          document.getElementById('installPrompt').classList.add('show');
+        }
+      }, 3000);
+    });
+    
+    function installApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((result) => {
+          deferredPrompt = null;
+          document.getElementById('installPrompt').classList.remove('show');
+        });
+      }
+    }
+    
+    function dismissInstall() {
+      document.getElementById('installPrompt').classList.remove('show');
+      localStorage.setItem('installDismissed', 'true');
+    }
+    
+    // Embedded fallback data (used if data.json can't be fetched)
+    const FALLBACK_DATA = {
+      "lastUpdated": "2025-01-14T12:00:00.000Z",
+      "sourceUrl": "https://stpetes.com/pages/poudre-river-fishing-report-fort-collins-fly-fishing",
+      "flowInfo": "Current Streamflow: 70 cfs @ Canyon Mouth, 36 cfs @ Fort Collins",
+      "reportText": "Freezing night time temps forecasted over the next week will start to build a bit more ice. Still plenty of fishable water in the lower stretches of the canyon though!\n\nCold water temperatures will keep our bug diversity and size down. The afternoons have been seeing some rising action so don't discount the dry fly and emergers! Wherever you head in the Fort Collins area to fish, bugs will be small. Sz 20-24 Midge and Baetis patterns, and keep in mind emerger patterns of equivalent sizes. Try a UV Emerger or a Bling Midge! Dare we say keep an eye for the midge hatches and maybe some BWO's. Check out a Charlie Craven's Mole Fly, or Shucking Midge to fool those trout that are sipping!\n\nFlows in Gateway have been up and down on the gauge so keep your eye on the flows here. A bump above 10 always gets the fish happy here. In Town has flow currently, so this should be on your list now!",
+      "mentionedFlies": ["UV Emerger", "Bling Midge", "Mole Fly", "Shucking Midge", "BWO", "Sz 20-24 Midge"],
+      "dryFlies": [
+        {"name": "Parachute Adams", "image": "https://stpetes.com/cdn/shop/files/Parachute_Adams_Dry_Fly_3.jpg?v=1734565817&width=400", "size": "18-22"},
+        {"name": "Blue Wing Olive", "image": "https://stpetes.com/cdn/shop/files/Blue_Wing_Olive_Dry_Fly_BWO_3.jpg?v=1734565920&width=400", "size": "20-24"},
+        {"name": "Griffith's Gnat", "image": "https://stpetes.com/cdn/shop/files/Griffiths_Gnat_3.jpg?width=400", "size": "18-22"},
+        {"name": "Eric's Hi-Vis Midge", "size": "20-24"}
+      ],
+      "nymphs": [
+        {"name": "Juju Baetis Purple", "image": "https://stpetes.com/cdn/shop/files/Juju_Baetis_3.jpg?width=400", "size": "20"},
+        {"name": "Two Bit Hooker Olive", "image": "https://stpetes.com/cdn/shop/files/Two_Bit_Hooker_Nymph_3.jpg?v=1763672340&width=400", "size": "18"},
+        {"name": "Grey Foam Wing RS2", "size": "20-24"},
+        {"name": "Zebra Midge", "size": "18-22"},
+        {"name": "Rainbow Warrior", "size": "18-20"},
+        {"name": "Copper John", "size": "16-20"}
+      ],
+      "streamers": [
+        {"name": "Woolly Bugger Black", "size": "8-12"},
+        {"name": "Slumpbuster Olive", "image": "https://stpetes.com/cdn/shop/files/rusty-trombone-4.webp?v=1762039048&width=400", "size": "6-10"}
+      ]
+    };
+
+    // Data fetching and rendering
+    let currentData = null;
+    
+    async function loadData() {
+      try {
+        const response = await fetch('data.json');
+        if (!response.ok) throw new Error('Failed to load data');
+        currentData = await response.json();
+        renderReport(currentData);
+      } catch (error) {
+        console.error('Error loading data.json, using fallback:', error);
+        // Use embedded fallback data instead of showing error
+        currentData = FALLBACK_DATA;
+        renderReport(currentData);
+      }
+    }
+    
+    async function refreshData() {
+      const btn = document.getElementById('refreshBtn');
+      btn.disabled = true;
+      btn.textContent = '↻';
+      btn.classList.add('loading');
+      
+      try {
+        // Force fresh fetch by adding cache-busting query
+        const response = await fetch('data.json?t=' + Date.now());
+        if (!response.ok) throw new Error('Failed to refresh');
+        currentData = await response.json();
+        renderReport(currentData);
+      } catch (error) {
+        console.error('Refresh failed:', error);
+        // Still show cached data if available
+        if (currentData) {
+          renderReport(currentData);
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '↻ Refresh';
+        btn.classList.remove('loading');
+      }
+    }
+    
+    function renderReport(data) {
+      const main = document.getElementById('mainContent');
+      const updateEl = document.getElementById('lastUpdate');
+      
+      // Format the update date
+      const updateDate = new Date(data.lastUpdated);
+      const formattedDate = updateDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+      updateEl.textContent = `Updated ${formattedDate}`;
+      
+      // Build the HTML
+      let html = '';
+      
+      // Report text section
+      if (data.reportText) {
+        html += `
+          <div class="report-section">
+            <h2>Latest Conditions</h2>
+            ${data.flowInfo ? `<div class="flow-info">${data.flowInfo}</div>` : ''}
+            <div class="report-text">
+              ${data.reportText.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('')}
+            </div>
+            ${data.mentionedFlies && data.mentionedFlies.length > 0 ? `
+              <div class="mentioned-flies">
+                <h3>Flies Mentioned in Report</h3>
+                <div class="mentioned-list">
+                  ${data.mentionedFlies.map(fly => `<span class="mentioned-tag">${fly}</span>`).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+      
+      // Fly sections
+      const categories = [
+        { key: 'dryFlies', title: 'Dry Flies', icon: '🪶' },
+        { key: 'nymphs', title: 'Nymphs', icon: '🪱' },
+        { key: 'streamers', title: 'Streamers', icon: '🐟' }
+      ];
+      
+      for (const cat of categories) {
+        const flies = data[cat.key];
+        if (flies && flies.length > 0) {
+          html += `
+            <section class="fly-section">
+              <h2>${cat.title}</h2>
+              <div class="fly-grid">
+                ${flies.map(fly => `
+                  <div class="fly-card">
+                    <div class="fly-image-wrapper">
+                      ${fly.image 
+                        ? `<img class="fly-image" src="${fly.image}" alt="${fly.name}" loading="lazy">`
+                        : `<div class="fly-image-placeholder">🪰</div>`
+                      }
+                    </div>
+                    <div class="fly-info">
+                      <div class="fly-name">${fly.name}</div>
+                      ${fly.size ? `<div class="fly-size">Size ${fly.size}</div>` : ''}
+                      ${fly.category ? `<span class="fly-category">${fly.category}</span>` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </section>
+          `;
+        }
+      }
+      
+      if (!html) {
+        html = '<div class="empty-state">No fly data available. Try refreshing when online.</div>';
+      }
+      
+      main.innerHTML = html;
+    }
+    
+    function renderError() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="error-state">
+          <p><strong>Unable to load fly report</strong></p>
+          <p>Please check your connection and try refreshing.</p>
+        </div>
+      `;
+    }
+    
+    // Initial load
+    loadData();
+  </script>
+</body>
+</html>
