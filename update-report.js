@@ -15,6 +15,7 @@ const fs = require('fs');
 const KNOWN_FLY_PATTERNS = [
   'UV Emerger',
   'Bling Midge',
+  "Charlie Craven's Mole Fly",
   'Mole Fly',
   'Shucking Midge',
   'RS2',
@@ -279,3 +280,4 @@ async function main() {
 }
 
 main();
+
