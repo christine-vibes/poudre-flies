@@ -1,110 +1,18 @@
 {
-  "lastUpdated": "2025-01-14T12:00:00.000Z",
+  "lastUpdated": "2026-01-15T21:18:38.763Z",
   "sourceUrl": "https://stpetes.com/pages/poudre-river-fishing-report-fort-collins-fly-fishing",
-  "flowInfo": "Current Streamflow: 70 cfs @ Canyon Mouth, 36 cfs @ Fort Collins",
-  "reportText": "Freezing night time temps forecasted over the next week will start to build a bit more ice. Still plenty of fishable water in the lower stretches of the canyon though!\n\nCold water temperatures will keep our bug diversity and size down. The afternoons have been seeing some rising action so don't discount the dry fly and emergers! Wherever you head in the Fort Collins area to fish, bugs will be small. Sz 20-24 Midge and Baetis patterns, and keep in mind emerger patterns of equivalent sizes. Try a UV Emerger or a Bling Midge! Dare we say keep an eye for the midge hatches and maybe some BWO's. Check out a Charlie Craven's Mole Fly, or Shucking Midge to fool those trout that are sipping!\n\nFlows in Gateway have been up and down on the gauge so keep your eye on the flows here. A bump above 10 always gets the fish happy here. In Town has flow currently, so this should be on your list now!",
+  "flowInfo": "Current Streamflow : 62 cfs",
+  "reportText": "@ Canyon Mouth , 28 cfs @ Fort Collins , 7 cfs @ North Fork below Seaman Reservoir Freezing night time temps forecasted over the next week will start to build a bit more ice. Still plenty of fishable water in the lower stretches of the canyon tough! Cold water temperatures will keep our bug diversity and size down. The afternoons have been seeing some rising action so don't discount the dry fly and emergers! Wherever you head in the Fort Collins area to fish, bugs will be small. Sz 20-24 Midge and Baetis patterns, and keep in mind emerger patterns of equivalent sizes. Try a UV Emerger or a Bling Midge! Dare we say keep an eye for the midge hatches and maybe some BWO's. Check out a Charlie Craven's Mole Fly, or Shucking Midge to fool those trout that are sipping! Flows in Gateway have been up and down on the gauge so keep your eye on the flows here. A bump above 10 always gets the fish happy here. In Town has flow currently, so this should be on your list now! If the inconsistent weather is too much for you, you can switch into tying mode and get creative! Check out our Intro to Fly Tying Class if tying is new to you! Check out our Poudre Assortment of bugs, nice Gateway assortment for the time! HERE! If you are looking for some help in this time to find fishable water or how to fish this technical stuff, come see us at either shop!",
   "mentionedFlies": [
     "UV Emerger",
     "Bling Midge",
     "Charlie Craven's Mole Fly",
+    "Mole Fly",
     "Shucking Midge",
     "BWO",
     "Sz 20-24 Midge"
   ],
-  "dryFlies": [
-    {
-      "name": "Parachute Adams",
-      "image": "https://stpetes.com/cdn/shop/files/Parachute_Adams_Dry_Fly_3.jpg?v=1734565817&width=400",
-      "size": "18-22"
-    },
-    {
-      "name": "Blue Wing Olive",
-      "image": "https://stpetes.com/cdn/shop/files/Blue_Wing_Olive_Dry_Fly_BWO_3.jpg?v=1734565920&width=400",
-      "size": "20-24"
-    },
-    {
-      "name": "Extended Body BWO",
-      "image": "https://stpetes.com/cdn/shop/products/extended-body-bwo.jpg?width=400",
-      "size": "20"
-    },
-    {
-      "name": "Griffith's Gnat",
-      "image": "https://stpetes.com/cdn/shop/files/Griffiths_Gnat_3.jpg?width=400",
-      "size": "18-22"
-    },
-    {
-      "name": "Eric's Hi-Vis Midge",
-      "image": "https://stpetes.com/cdn/shop/products/erics-hi-vis-midge.jpg?width=400",
-      "size": "20-24"
-    },
-    {
-      "name": "Sparkle Dun BWO",
-      "image": "https://stpetes.com/cdn/shop/products/sparkle-dun-bwo.jpg?width=400",
-      "size": "20-22"
-    }
-  ],
-  "nymphs": [
-    {
-      "name": "Juju Baetis Purple",
-      "image": "https://stpetes.com/cdn/shop/files/Juju_Baetis_3.jpg?width=400",
-      "size": "20"
-    },
-    {
-      "name": "Two Bit Hooker Olive",
-      "image": "https://stpetes.com/cdn/shop/files/Two_Bit_Hooker_Nymph_3.jpg?v=1763672340&width=400",
-      "size": "18"
-    },
-    {
-      "name": "Poison Tung",
-      "image": "https://stpetes.com/cdn/shop/products/poison-tung.jpg?width=400",
-      "size": "20"
-    },
-    {
-      "name": "Grey Foam Wing RS2",
-      "image": "https://stpetes.com/cdn/shop/products/grey-foam-wing-rs2.jpg?width=400",
-      "size": "20-24"
-    },
-    {
-      "name": "Zebra Midge",
-      "image": "https://stpetes.com/cdn/shop/products/zebra-midge.jpg?width=400",
-      "size": "18-22"
-    },
-    {
-      "name": "Mercury Midge",
-      "image": "https://stpetes.com/cdn/shop/products/mercury-midge.jpg?width=400",
-      "size": "20-24"
-    },
-    {
-      "name": "Rainbow Warrior",
-      "image": "https://stpetes.com/cdn/shop/products/rainbow-warrior.jpg?width=400",
-      "size": "18-20"
-    },
-    {
-      "name": "Copper John",
-      "image": "https://stpetes.com/cdn/shop/products/copper-john.jpg?width=400",
-      "size": "16-20"
-    }
-  ],
-  "streamers": [
-    {
-      "name": "Woolly Bugger Black",
-      "image": "https://stpetes.com/cdn/shop/products/woolly-bugger-black.jpg?width=400",
-      "size": "8-12"
-    },
-    {
-      "name": "Slumpbuster Olive",
-      "image": "https://stpetes.com/cdn/shop/files/rusty-trombone-4.webp?v=1762039048&width=400",
-      "size": "6-10"
-    },
-    {
-      "name": "Baby Gonga",
-      "image": "https://stpetes.com/cdn/shop/products/baby-gonga.jpg?width=400",
-      "size": "8"
-    },
-    {
-      "name": "Sculpzilla",
-      "image": "https://stpetes.com/cdn/shop/products/sculpzilla.jpg?width=400",
-      "size": "6-8"
-    }
-  ]
+  "dryFlies": [],
+  "nymphs": [],
+  "streamers": []
 }
