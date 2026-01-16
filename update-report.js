@@ -10,68 +10,58 @@
 const https = require('https');
 const fs = require('fs');
 
-// Known flies with their St. Pete's product slugs
-const FLY_PRODUCT_SLUGS = {
-  'UV Emerger': 'uv-midge',
-  'Bling Midge': 'bling-midge',
-  'Zebra Midge': 'zebra-midge',
-  'Mole Fly': 'mole-fly',
-  "Charlie Craven's Mole Fly": 'mole-fly',
-  'Shucking Midge': 'shucking-midge',
-  'RS2': 'rs2',
-  'Foam Wing RS2': 'foam-wing-rs2',
-  'Grey Foam Wing RS2': 'foam-wing-rs2',
-  'BWO': 'blue-wing-olive',
-  'Blue Wing Olive': 'blue-wing-olive',
-  'Extended Body BWO': 'extended-body-bwo',
-  'Parachute Adams': 'parachute-adams',
-  "Griffith's Gnat": 'griffiths-gnat',
-  'Top Secret Midge': 'top-secret-midge',
-  'Mercury Midge': 'mercury-midge',
-  'Juju Baetis': 'juju-baetis',
-  'Pheasant Tail': 'pheasant-tail',
-  'Copper John': 'copper-john',
-  'Two Bit Hooker': 'two-bit-hooker',
-  'Poison Tung': 'poison-tung',
-  'San Juan Worm': 'san-juan-worm',
-  "Pat's Rubber Legs": 'pats-rubber-legs',
-  'Sparkle Dun': 'sparkle-dun',
-  'Comparadun': 'comparadun',
-  'Hi-Vis Midge': 'hi-vis-midge',
-  "Eric's Hi-Vis Midge": 'hi-vis-midge',
-  'WD-40': 'wd-40',
-  'Barr Emerger': 'barr-emerger',
-  'Rojo Midge': 'rojo-midge',
-  'Black Beauty': 'black-beauty',
-  'Rainbow Warrior': 'rainbow-warrior',
-  'Hopper': 'hopper',
-  'Stimulator': 'stimulator',
-  'Elk Hair Caddis': 'elk-hair-caddis',
-  'Woolly Bugger': 'woolly-bugger',
-  'Slumpbuster': 'slumpbuster'
-};
-
-// Categorize flies
-const DRY_FLIES = ['BWO', 'Blue Wing Olive', 'Extended Body BWO', 'Parachute Adams', "Griffith's Gnat", 
-                   'Sparkle Dun', 'Comparadun', 'Hi-Vis Midge', "Eric's Hi-Vis Midge", 'Hopper', 
-                   'Stimulator', 'Elk Hair Caddis'];
-const STREAMERS = ['Woolly Bugger', 'Slumpbuster'];
+// Fly patterns to look for in the report text
+// These are common patterns mentioned in Poudre reports
+const KNOWN_FLY_PATTERNS = [
+  'UV Emerger',
+  'Bling Midge',
+  "Charlie Craven's Mole Fly",
+  'Mole Fly',
+  'Shucking Midge',
+  'RS2',
+  'Foam Wing RS2',
+  'Grey Foam Wing RS2',
+  'BWO',
+  'Blue Wing Olive',
+  'Extended Body BWO',
+  'Parachute Adams',
+  'Griffith\'s Gnat',
+  'Zebra Midge',
+  'Top Secret Midge',
+  'Mercury Midge',
+  'Juju Baetis',
+  'Pheasant Tail',
+  'Copper John',
+  'Two Bit Hooker',
+  'Poison Tung',
+  'San Juan Worm',
+  'Pat\'s Rubber Legs',
+  'Sparkle Dun',
+  'Comparadun',
+  'Hi-Vis Midge',
+  'Eric\'s Hi-Vis Midge',
+  'Medallion Midge',
+  'WD-40',
+  'Barr Emerger',
+  'Stalcup Baetis',
+  'Rojo Midge',
+  'Black Beauty',
+  'Rainbow Warrior',
+  'Hopper',
+  'Stimulator',
+  'Elk Hair Caddis',
+  'Woolly Bugger',
+  'Slumpbuster',
+  'Circus Peanut'
+];
 
 function fetch(url) {
   return new Promise((resolve, reject) => {
     https.get(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (compatible; PoudreFliesBot/1.0)'
       }
     }, (res) => {
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        let redirectUrl = res.headers.location;
-        if (redirectUrl.startsWith('/')) {
-          const urlObj = new URL(url);
-          redirectUrl = `${urlObj.protocol}//${urlObj.host}${redirectUrl}`;
-        }
-        return fetch(redirectUrl).then(resolve).catch(reject);
-      }
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => resolve({ status: res.statusCode, data }));
@@ -79,162 +69,209 @@ function fetch(url) {
   });
 }
 
-function extractImageFromProductPage(html) {
-  // Look for product images in various formats
-  const patterns = [
-    /src="(\/\/stpetes\.com\/cdn\/shop\/files\/[^"?]+)/g,
-    /src="(https:\/\/stpetes\.com\/cdn\/shop\/files\/[^"?]+)/g,
-    /"src":"(\/\/stpetes\.com\/cdn\/shop\/files\/[^"?]+)/g
-  ];
-  
-  for (const pattern of patterns) {
-    const matches = [...html.matchAll(pattern)];
-    for (const match of matches) {
-      let url = match[1];
-      url = url.replace(/\\\//g, '/');
-      if (url.startsWith('//')) url = 'https:' + url;
-      // Skip logos and unrelated images
-      if (url.includes('logo') || url.includes('Gift_Card') || url.includes('Petes_logo')) continue;
-      return url + '?width=400';
-    }
-  }
-  return null;
+function extractTextContent(html) {
+  // Remove script and style tags
+  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  html = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  // Convert br and p to newlines
+  html = html.replace(/<br\s*\/?>/gi, '\n');
+  html = html.replace(/<\/p>/gi, '\n');
+  // Remove all other HTML tags
+  html = html.replace(/<[^>]+>/g, ' ');
+  // Decode HTML entities
+  html = html.replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+  // Clean up whitespace
+  html = html.replace(/\s+/g, ' ').trim();
+  return html;
 }
 
-async function fetchFlyImage(flyName) {
-  const slug = FLY_PRODUCT_SLUGS[flyName];
-  if (!slug) {
-    console.log(`  No product slug for: ${flyName}`);
-    return null;
+function extractReportSection(html) {
+  // Find the "Latest Update" section
+  // Looking for content after "Latest Update:" and before the fly recommendations section
+  
+  // Extract the main content area
+  const mainMatch = html.match(/Latest Update:[\s\S]*?(?=Poudre River Recommended Flies|Poudre River Dry Flies|<footer)/i);
+  
+  if (!mainMatch) {
+    console.log('Could not find Latest Update section');
+    return { reportText: '', flowInfo: '', mentionedFlies: [] };
   }
   
-  const url = `https://stpetes.com/products/${slug}`;
-  try {
-    console.log(`  Fetching ${slug}...`);
-    const response = await fetch(url);
-    if (response.status === 200) {
-      const image = extractImageFromProductPage(response.data);
-      if (image) {
-        console.log(`    Found: ${image.substring(0, 50)}...`);
-        return image;
-      }
-    }
-    console.log(`    No image found`);
-  } catch (err) {
-    console.log(`    Error: ${err.message}`);
-  }
-  return null;
-}
-
-function extractReportFromHtml(html) {
-  let reportText = '';
-  let flowInfo = '';
+  let content = mainMatch[0];
   
   // Extract flow info
-  const flowMatch = html.match(/Current Streamflow\s*:?\s*([^<]*(?:<[^>]*>[^<]*)*?)(?=Freezing|Cold|Warm|Yay|The river|Flows have|Still plenty)/is);
+  let flowInfo = '';
+  const flowMatch = content.match(/Current Streamflow[^<]*/i);
   if (flowMatch) {
-    flowInfo = flowMatch[0].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    flowInfo = extractTextContent(flowMatch[0]);
   }
   
-  // Extract main report text
-  const reportMatch = html.match(/Latest Update:\s*\*?\*?\s*(\d+\/\d+\/\d+)\s*\*?\*?\s*([\s\S]*?)(?=Poudre River Recommended Flies|Poudre River Dry Flies|These are our current favorites)/i);
+  // Get the text content
+  let reportText = extractTextContent(content);
   
-  if (reportMatch) {
-    reportText = reportMatch[2]
-      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/\s+/g, ' ')
-      .trim();
-  }
+  // Clean up - remove the "Latest Update" header and date
+  reportText = reportText.replace(/Latest Update:\s*\d+\/\d+\/\d+/i, '').trim();
+  reportText = reportText.replace(/Current Streamflow.*?cfs/gi, '').trim();
   
-  return { reportText, flowInfo };
-}
-
-function findMentionedFlies(text) {
-  const found = [];
-  const lowerText = text.toLowerCase();
+  // Find mentioned flies
+  const mentionedFlies = [];
+  const lowerReport = reportText.toLowerCase();
   
-  for (const flyName of Object.keys(FLY_PRODUCT_SLUGS)) {
-    if (lowerText.includes(flyName.toLowerCase())) {
-      found.push(flyName);
+  for (const pattern of KNOWN_FLY_PATTERNS) {
+    if (lowerReport.includes(pattern.toLowerCase())) {
+      mentionedFlies.push(pattern);
     }
   }
   
-  // Size patterns
-  const sizePatterns = text.match(/Sz\.?\s*\d+[-–]\d+\s+\w+/gi) || [];
+  // Also look for size patterns like "Sz 20-24 Midge"
+  const sizePatterns = reportText.match(/Sz\.?\s*\d+[-–]\d+\s+\w+/gi) || [];
   for (const sp of sizePatterns) {
-    if (!found.includes(sp.trim())) found.push(sp.trim());
+    if (!mentionedFlies.some(f => sp.toLowerCase().includes(f.toLowerCase()))) {
+      mentionedFlies.push(sp.trim());
+    }
   }
   
-  return found;
+  return { reportText, flowInfo, mentionedFlies };
 }
 
-function categorizeFly(flyName) {
-  if (DRY_FLIES.some(d => flyName.toLowerCase().includes(d.toLowerCase()))) return 'dry';
-  if (STREAMERS.some(s => flyName.toLowerCase().includes(s.toLowerCase()))) return 'streamer';
-  return 'nymph';
+function extractProductsFromCollection(html) {
+  const products = [];
+  
+  // Shopify product grid items typically have product info in data attributes or structured HTML
+  // Look for product cards
+  const productBlocks = html.match(/<div[^>]*class="[^"]*product-card[^"]*"[^>]*>[\s\S]*?<\/div>\s*<\/div>/gi) || [];
+  
+  // Also try to find product JSON if available
+  const jsonMatch = html.match(/var\s+products\s*=\s*(\[[\s\S]*?\]);/);
+  if (jsonMatch) {
+    try {
+      const productsJson = JSON.parse(jsonMatch[1]);
+      for (const p of productsJson) {
+        products.push({
+          name: p.title,
+          image: p.featured_image || p.images?.[0],
+          size: extractSize(p.title),
+          price: p.price
+        });
+      }
+      return products;
+    } catch (e) {
+      // Continue with HTML parsing
+    }
+  }
+  
+  // Parse product cards from HTML
+  // Look for image and title patterns
+  const cardMatches = html.matchAll(/<a[^>]*href="\/products\/([^"]+)"[^>]*>[\s\S]*?<img[^>]*src="([^"]+)"[^>]*>[\s\S]*?<span[^>]*class="[^"]*title[^"]*"[^>]*>([^<]+)/gi);
+  
+  for (const match of cardMatches) {
+    const slug = match[1];
+    let image = match[2];
+    const name = match[3].trim();
+    
+    // Fix image URL if needed
+    if (image.startsWith('//')) {
+      image = 'https:' + image;
+    }
+    
+    // Get a reasonable size image
+    image = image.replace(/\?v=\d+/, '').replace(/&width=\d+/, '') + '?width=400';
+    
+    products.push({
+      name,
+      image,
+      size: extractSize(name)
+    });
+  }
+  
+  return products;
+}
+
+function extractSize(name) {
+  const sizeMatch = name.match(/#(\d+)/);
+  return sizeMatch ? sizeMatch[1] : null;
+}
+
+async function fetchCollection(url) {
+  try {
+    // Shopify collections have a .json endpoint
+    const jsonUrl = url.replace(/\/?$/, '.json');
+    const response = await fetch(jsonUrl);
+    
+    if (response.status === 200) {
+      const data = JSON.parse(response.data);
+      if (data.products) {
+        return data.products.map(p => ({
+          name: p.title,
+          image: p.images?.[0]?.src || p.featured_image,
+          size: extractSize(p.title),
+          handle: p.handle
+        }));
+      }
+    }
+  } catch (e) {
+    console.log(`Could not fetch collection JSON: ${e.message}`);
+  }
+  
+  // Fallback to HTML parsing
+  try {
+    const response = await fetch(url);
+    if (response.status === 200) {
+      return extractProductsFromCollection(response.data);
+    }
+  } catch (e) {
+    console.log(`Could not fetch collection: ${e.message}`);
+  }
+  
+  return [];
 }
 
 async function main() {
-  console.log('=== Poudre River Fly Report Scraper ===\n');
+  console.log('Fetching Poudre River fishing report...');
   
   const reportUrl = 'https://stpetes.com/pages/poudre-river-fishing-report-fort-collins-fly-fishing';
   
   try {
-    console.log('Fetching report page...');
+    // Fetch main report page
     const reportResponse = await fetch(reportUrl);
-    if (reportResponse.status !== 200) throw new Error(`Failed: ${reportResponse.status}`);
-    
-    const { reportText, flowInfo } = extractReportFromHtml(reportResponse.data);
-    console.log(`Flow: ${flowInfo.substring(0, 60)}...`);
-    console.log(`Report: ${reportText.substring(0, 80)}...\n`);
-    
-    const mentionedFlies = findMentionedFlies(reportText);
-    console.log(`Found ${mentionedFlies.length} flies: ${mentionedFlies.join(', ')}\n`);
-    
-    // Fetch images
-    console.log('Fetching fly images...');
-    const flyData = [];
-    
-    for (const flyName of mentionedFlies) {
-      if (flyName.startsWith('Sz')) continue;
-      const image = await fetchFlyImage(flyName);
-      flyData.push({ name: flyName, image, category: categorizeFly(flyName) });
-      await new Promise(r => setTimeout(r, 200));
+    if (reportResponse.status !== 200) {
+      throw new Error(`Failed to fetch report: ${reportResponse.status}`);
     }
     
-    // Add common winter flies
-    const commonFlies = ['Zebra Midge', 'Parachute Adams', 'Juju Baetis', 'Two Bit Hooker', 'RS2'];
-    for (const flyName of commonFlies) {
-      if (!flyData.some(f => f.name === flyName)) {
-        const image = await fetchFlyImage(flyName);
-        flyData.push({ name: flyName, image, category: categorizeFly(flyName) });
-        await new Promise(r => setTimeout(r, 200));
-      }
-    }
+    const { reportText, flowInfo, mentionedFlies } = extractReportSection(reportResponse.data);
+    console.log(`Found ${mentionedFlies.length} mentioned flies in report`);
     
-    const dryFlies = flyData.filter(f => f.category === 'dry' && f.image);
-    const nymphs = flyData.filter(f => f.category === 'nymph' && f.image);
-    const streamers = flyData.filter(f => f.category === 'streamer' && f.image);
+    // Fetch fly collections
+    console.log('Fetching fly collections...');
     
-    console.log(`\nResults: ${dryFlies.length} dry, ${nymphs.length} nymphs, ${streamers.length} streamers`);
+    const [dryFlies, nymphs, streamers] = await Promise.all([
+      fetchCollection('https://stpetes.com/collections/poudre-river-report-dry-flies'),
+      fetchCollection('https://stpetes.com/collections/poudre-river-report-nymphs'),
+      fetchCollection('https://stpetes.com/collections/poudre-river-report-streamers')
+    ]);
     
+    console.log(`Found: ${dryFlies.length} dry flies, ${nymphs.length} nymphs, ${streamers.length} streamers`);
+    
+    // Build the data object
     const data = {
       lastUpdated: new Date().toISOString(),
       sourceUrl: reportUrl,
       flowInfo,
       reportText,
       mentionedFlies,
-      dryFlies: dryFlies.map(f => ({ name: f.name, image: f.image })),
-      nymphs: nymphs.map(f => ({ name: f.name, image: f.image })),
-      streamers: streamers.map(f => ({ name: f.name, image: f.image }))
+      dryFlies: dryFlies.slice(0, 8), // Limit to 8 per category for clean display
+      nymphs: nymphs.slice(0, 8),
+      streamers: streamers.slice(0, 8)
     };
     
+    // Write to data.json
     fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
-    console.log('\n✓ Wrote data.json');
+    console.log('Successfully wrote data.json');
     
   } catch (error) {
     console.error('Error:', error.message);
